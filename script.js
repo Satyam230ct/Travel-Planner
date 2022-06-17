@@ -58,9 +58,6 @@ onload = function() {
             });
         }
 
-        // Prepares vis.js style nodes for our data
-        vertices = new vis.DataSet(vertices);
-
         let edges=[];
 
          // Creating a tree like underlying graph structure 
