@@ -21,15 +21,8 @@ section{
 
  #container1,#container2 {
     width: 50%;
+    border-right: 3px solid black;
     height: 70vh;
-}
-
-#container1{
-    background-color: blueviolet;
-}
-
-#container2{
-    background-color: greenyellow;
 }
 
 #problem_text{
@@ -42,4 +35,3 @@ section{
     display: flex;
     justify-content: space-around;
 }
-

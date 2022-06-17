@@ -1,48 +1,42 @@
 const id = (id) => document.getElementById(id);
 
+var curr_data,V,src,dst; // Currentdata, size, source, destination
+
+const locations = [
+    'Taj Mahal','Pangong Lake', 'Gwalior Fort','Lotus Temple'
+    ,'Charminar', 'Red Fort', 'Amber Fort','Elephanta Caves'
+    ,'Tawang Monastery','Mysore Palace','Sun Temple' ];
+
+
 onload = function() {
-    
-    var cur_data,sz,src,dst; // Currentdata, size, source, destination
-    
-    const locations = [
-        'Taj Mahal','Pangong Lake', 'Jaisalmer Fort','Hampi'
-        ,'Charminar', 'Red Fort', 'Amber Fort','Elephanta Caves'
-        ,'Tawang Monastery','Kesaria Stupa','Sun Temple',
-        'Mysore Palace','Gwalior Fort','The Great Stupa'
-        ,'Humayuns Tomb','Mahabalipuram', 'Gateway of India', 
-        'Lotus Temple'
-    ];
-    
     
     const container1= id('container1');
     const container2= id('container2');
-    const get_prbm= id('get_poblem');
+    const get_prbm= id('get_problem');
     const solve_prbm= id('solve_problem');
     const prbm_text= id('problem_text'); 
-        
+    
     // Initialise graph options
-    // only the options that have shorthand notations are shown.
-    var options = {
-        edges:{
-            labelHighlightBold:true,
-            font: {
-                size: 20
-            }
+    // only the options that have shorthand notations are shown.    
+    const options = {
+        edges: {
+            labelHighlightBold: true
         },
-        nodes:{
-            font: '12px arial red',
+        nodes: {
+            font: '12px arial black',
             scaling: {
                 label: true
             },
-            shape:'icon',
-            icon:{
+            shape: 'icon',
+            icon: {
                 face: 'FontAwesome',
                 code: '\uf3c5',
                 size: 40,
                 color: '#991133',
             }
         }
-    }
+    };
+    
     // For the Problem Graph
     const network1 = new vis.Network(container1);
     network1.setOptions(options);
@@ -53,7 +47,7 @@ onload = function() {
 
     function createData()
     {
-        const V= Math.floor(Math.min(Math.random()*locations.length,13))+3;
+        V= Math.min(Math.floor(Math.random()*locations.length)+3,9);
 
         let vertices = [];
 
@@ -63,9 +57,13 @@ onload = function() {
                 label:locations[i]
             });
         }
-        // console.log(vertices);
+
+        // Prepares vis.js style nodes for our data
+        vertices = new vis.DataSet(vertices);
 
         let edges=[];
+
+         // Creating a tree like underlying graph structure 
         for(let i=0; i<V; i++){
             let neigh = i;
             while(neigh==i) neigh = Math.floor(Math.random()*V);
@@ -80,29 +78,36 @@ onload = function() {
         src = Math.floor(Math.random()*V);
         
         const data = {
-            nodes : vertices,
-            edges: edges
+            edges: edges,
+            nodes : vertices
         };
-        console.log(data)
-        sz = vertices.length;
-        cur_data=data;
+
         return data;
     }
 
-    console.log(cur_data)
-
     get_prbm.onclick = function () {
         // Create new data and display the data
-        createData();
+        curr_data=createData();
         network1.setData(curr_data);
         prbm_text.innerText = 'Find least time path from '+locations[src]+' to '+locations[dst];
-        // container2.style.display = "none";
+        container2.style.display= "none";
     };
 
-    // solve_prbm.onclick = function () {
-    //     // Create graph from data and set to display
-    //     network2.setData(solveData());
-    // };
+    solve_prbm.onclick = function () {
+        // Create graph from data and set to display
+        container2.style.display = "inline";
+
+        let solve_data=solveData(V);
+    
+        if(solve_data==null){
+            container2.style.display= "none";
+            prbm_text.innerText = 'Sorry no path from '+locations[src]+' to '+locations[dst]+' exist';
+        }
+        else
+        {
+            network2.setData(solve_data);
+        }
+    };
 
     function dijkstra(graph, sz, src)
     {
@@ -134,12 +139,16 @@ onload = function() {
         return dist;
     }
 
-    function solveData(sz) {
+    function solveData(V) {
+
         let data = curr_data;
         var graph = [];
-        for(let i=0;i<sz;i++){
+
+        for(let i=0;i<=V;i++){
             graph.push([]);
         }
+        
+        console.log(data)
 
         for(let i=0;i<data['edges'].length;i++) {
             let edge = data['edges'][i];
@@ -147,7 +156,12 @@ onload = function() {
             graph[edge['from']].push([edge['to'],parseInt(edge['label'])]);
         }
 
-        let dist1 = dijkstra(graph,sz,src);
+        let dist1 = dijkstra(graph,V,src);
+
+        if(dist1[V-1][1]==-1) // No route exist
+        {
+            return null;
+        }
 
         let new_edges = [];
         new_edges=pushEdges(dist1, dst);
@@ -155,6 +169,7 @@ onload = function() {
             nodes: data['nodes'],
             edges: new_edges
         };
+
         return data;
     }
 
@@ -172,7 +187,5 @@ onload = function() {
         return new_edges;
     }
 
-
-
-    // get_prbm.click();
+    get_prbm.click();
 }
