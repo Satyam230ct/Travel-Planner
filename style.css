@@ -1,0 +1,45 @@
+body{
+    margin: 0px;
+}
+
+nav{
+    background-color: whitesmoke;
+    font-size: 3rem;
+    padding: 8.5px;
+    display: flex;
+    justify-content: center;
+}
+
+nav img{
+    height: 80px;
+    width: 80px;
+}
+
+section{
+    display: flex;
+}
+
+ #container1,#container2 {
+    width: 50%;
+    height: 70vh;
+}
+
+#container1{
+    background-color: blueviolet;
+}
+
+#container2{
+    background-color: greenyellow;
+}
+
+#problem_text{
+    font-size: 2.5rem;
+    margin: auto;
+    text-align: center;
+}
+
+#button-div{
+    display: flex;
+    justify-content: space-around;
+}
+
