@@ -65,7 +65,7 @@ onload = function() {
             let neigh = i;
             while(neigh==i) neigh = Math.floor(Math.random()*V);
             edges.push({from:i, to:neigh, color: 'orange', 
-                        label: String(Math.floor(Math.random()*70)+30)});
+                        label: String(Math.floor(Math.random()*10)+3)});
         }
 
         src = Math.floor(Math.random()*V);
